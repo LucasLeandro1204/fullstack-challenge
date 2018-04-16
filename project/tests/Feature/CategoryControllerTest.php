@@ -19,6 +19,6 @@ class CategoryControllerTest extends TestCase
 
         $response = $this->json('GET', route('category.index'));
 
-        dd($response);
+        $this->assertCount(10, $response->original);
     }
 }
