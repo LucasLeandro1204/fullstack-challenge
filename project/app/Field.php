@@ -3,9 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class Field extends Model
 {
     /**
      * The attributes that aren't mass assignable.
@@ -17,10 +16,11 @@ class Category extends Model
     ];
 
     /**
-     * Field relation.
+     * The attributes that should be cast to native types.
+     *
+     * @var array
      */
-    public function fields(): HasMany
-    {
-        return $this->hasMany(Field::class);
-    }
+    protected $casts = [
+        'options' => 'array',
+    ];
 }
