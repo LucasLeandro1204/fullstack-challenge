@@ -12,15 +12,15 @@ class CategoriesTableSeeder extends Seeder
      */
     protected $categories = [
         [
-            'name' => 'Car',
+            'name' => 'Cars',
             'icon' => 'fa-car',
         ],
         [
-            'name' => 'Motorcycle',
+            'name' => 'Motorcycles',
             'icon' => 'fa-motorcycle',
         ],
         [
-            'name' => 'Property to rent',
+            'name' => 'Properties to rent',
             'icon' => 'fa-building',
         ],
         [

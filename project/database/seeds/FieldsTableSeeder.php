@@ -37,7 +37,7 @@ class FieldsTableSeeder extends Seeder
     public function run()
     {
         try {
-            $category = Category::where('name', 'Car')->firstOrFail();
+            $category = Category::where('name', 'Cars')->firstOrFail();
 
             $category->fields()->createMany($this->fields);
         } catch (\Exception $e) {
