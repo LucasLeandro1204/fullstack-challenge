@@ -3,9 +3,6 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\View\View;
-use Illuminate\Foundation\Testing\TestResponse;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SiteControllerTest extends TestCase
 {
