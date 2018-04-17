@@ -19,7 +19,7 @@ class CreateAdvertisementsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('category_id')->unsigned()->nullable();
             $table->string('title');
-            $table->string('thumbnail')->nullble();
+            $table->string('thumbnail')->nullable();
             $table->integer('price')->unsigned();
             $table->text('description');
 

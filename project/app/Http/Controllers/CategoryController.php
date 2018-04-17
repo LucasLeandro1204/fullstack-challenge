@@ -12,6 +12,6 @@ class CategoryController extends Controller
      */
     public function __invoke(): Collection
     {
-        return Category::with('fields')->get();
+        return Category::get();
     }
 }
