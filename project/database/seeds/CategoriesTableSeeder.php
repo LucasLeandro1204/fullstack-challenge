@@ -14,6 +14,23 @@ class CategoriesTableSeeder extends Seeder
         [
             'name' => 'Cars',
             'icon' => 'fa-car',
+            'fields' => [
+                [
+                    'name' => 'Mileage in kilometers',
+                    'type' => 'range',
+                ],
+                [
+                    'name' => 'Year',
+                    'type' => 'range',
+                ],
+                [
+                    'name' => 'Fuel',
+                    'type' => 'check_box',
+                    'options' => [
+                        'Gasoline', 'Alcohol', 'Diesel', 'Natural Gas',
+                    ],
+                ],
+            ],
         ],
         [
             'name' => 'Motorcycles',
@@ -40,8 +57,12 @@ class CategoriesTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach ($this->categories as $category) {
-            Category::create($category);
+        foreach ($this->categories as $options) {
+            $category = Category::create(array_except($options, 'fields'));
+
+            if (isset($options['fields'])) {
+                $category->fields()->createMany($options['fields']);
+            }
         }
     }
 }
