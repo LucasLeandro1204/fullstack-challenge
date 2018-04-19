@@ -8,6 +8,7 @@
     <title>XLO</title>
 
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
   </head>
   <body>
     <div id="app"></div>

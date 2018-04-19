@@ -1,9 +1,23 @@
 const mix = require('laravel-mix');
 const tailwindcss = require('tailwindcss');
 
-mix.js('resources/assets/js/app.js', 'public/js');
+const paths = {
+  js: path.join(__dirname, 'resources/assets/js'),
+  scss: path.join(__dirname, 'resources/assets/scss'),
+};
 
-mix.sass('resources/assets/scss/app.scss', 'public/css')
+mix.webpackConfig({
+  resolve: {
+    alias: {
+      'core': path.join(paths.js, 'core'),
+      '@': path.join(paths.js, 'components'),
+    },
+  },
+});
+
+mix.js(path.join(paths.js, 'app.js'), 'public/js');
+
+mix.sass(path.join(paths.scss, 'app.scss'), 'public/css')
   .options({
     processCssUrls: false,
     postCss: [
