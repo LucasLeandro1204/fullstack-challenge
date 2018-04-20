@@ -46,6 +46,10 @@
  */
 @tailwind utilities;
 
+a {
+  text-decoration: none;
+}
+
 /**
  * Here you would add any custom utilities you need that don't come out of the
  * box with Tailwind.

@@ -1,3 +1,5 @@
 <template>
-  <p>kkkkkkk</p>
+  <section>
+    kkkkkkkk
+  </section>
 </template>
