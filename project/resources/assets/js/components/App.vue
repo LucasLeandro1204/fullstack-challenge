@@ -1,5 +1,5 @@
 <template>
-  <div class="font-sans flex flex-col-reverse pb-9 min-h-screen md:flex-col md:pb-0">
+  <div class="font-sans flex flex-col-reverse pb-9 md:flex-col md:pb-0">
     <app-header />
 
     <main class="container flex flex-wrap py-8">
