@@ -3,8 +3,8 @@
     <app-header />
 
     <main class="container flex flex-wrap py-8">
-      <router-view class="w-full md:w-64" name="sidebar" />
-      <router-view class="flex-1" />
+      <router-view class="w-full md:w-64 pr-4" name="sidebar" />
+      <router-view class="flex-1 pl-4" />
     </main>
   </div>
 </template>
