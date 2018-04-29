@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\Advertisement;
 use App\Queries\SearchAdvertisements;
-use App\Http\Resources\AdvertisementResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class AdvertisementController extends Controller
@@ -14,7 +14,7 @@ class AdvertisementController extends Controller
      */
     public function index(Request $request): ResourceCollection
     {
-        return AdvertisementResource::collection(
+        return Advertisement::collection(
             SearchAdvertisements::from($request)->get()
         );
     }

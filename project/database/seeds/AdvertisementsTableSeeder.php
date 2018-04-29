@@ -17,7 +17,7 @@ class AdvertisementsTableSeeder extends Seeder
         $categories = Category::get();
 
         $categories->each(function (Category $category) {
-            $advertisements = factory(Advertisement::class, 15)->create([
+            $advertisements = factory(Advertisement::class, rand(2, 21))->create([
                 'category_id' => $category->id,
             ]);
 

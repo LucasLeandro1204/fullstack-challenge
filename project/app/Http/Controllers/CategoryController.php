@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Category;
-use Illuminate\Support\Collection;
+use App\Http\Resources\Category as CategoryResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class CategoryController extends Controller
 {
     /**
      * List categories.
      */
-    public function __invoke(): Collection
+    public function __invoke(): ResourceCollection
     {
-        return Category::get();
+        return CategoryResource::collection(
+            Category::with('fields')->get()
+        );
     }
 }
