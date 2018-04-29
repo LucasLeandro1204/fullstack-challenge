@@ -12,17 +12,15 @@
 <script>
   import AppHeader from '@/Header.vue';
 
+  import store from 'core/store';
   import router from 'core/router';
 
   export default {
+    store,
     router,
 
     components: {
       AppHeader,
-    },
-
-    mounted () {
-      console.log(this.$router.matcher);
     },
   };
 </script>

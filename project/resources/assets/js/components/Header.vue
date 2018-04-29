@@ -1,5 +1,5 @@
 <template>
-  <header class="flex bg-white border-t w-full pin-b fixed shadow-inner md:relative md:border-t-0 md:border-b">
+  <header class="flex bg-white border-t w-full pin-b z-50 fixed shadow-inner md:relative md:border-t-0 md:border-b">
     <div class="container">
       <div class="flex items-center">
         <a class="text-blue-dark font-bold text-2xl py-1 px-2 mr-8 md:text-3xl" href="#">XLO</a>

@@ -21,7 +21,7 @@ const mutations = {
 
 const actions = {
   loadCategories ({ commit }) {
-    Axios.get('category')
+    return Axios.get('category')
       .then(({ data }) => {
         commit('SET_CATEGORIES', data.data);
       })
