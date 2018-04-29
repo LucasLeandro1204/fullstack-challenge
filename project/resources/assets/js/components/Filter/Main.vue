@@ -14,12 +14,10 @@
           <input class="w-full border border-l-0 px-2 rounded-tr rounded-br" type="number" placeholder="To">
         </div>
 
-        <template v-for="(option, index) in field.options" v-else>
-          <label :key="option">
-            <input class="mr-1" :class="{ 'mt-2': index != 0 }" type="checkbox" :value="option">
-            {{ option }}
-          </label>
-        </template>
+        <label :key="option" v-for="(option, index) in field.options" v-else>
+          <input class="mr-1" :class="{ 'mt-2': index != 0 }" type="checkbox" :value="option">
+          {{ option }}
+        </label>
       </filter-field>
 
       <filter-field v-if="current.fields">
