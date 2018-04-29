@@ -10,7 +10,7 @@ Vue.use(VueRouter);
 export default new VueRouter({
   mode: 'history',
   parseQuery: parse,
-  stringifyQuery: query => stringify(query, { arrayFormat: 'brackets', encode: false }),
+  stringifyQuery: query => stringify(query, { arrayFormat: 'brackets', encode: false, addQueryPrefix: true}),
   routes: [
     {
       path: '/:categorySlug?',
