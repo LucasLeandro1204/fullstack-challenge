@@ -11,6 +11,7 @@ mix.webpackConfig({
     alias: {
       'core': path.join(paths.js, 'core'),
       '@': path.join(paths.js, 'components'),
+      'stores': path.join(paths.js, 'stores'),
     },
   },
 });
