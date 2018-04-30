@@ -121,8 +121,9 @@
 
     methods: {
       submit () {
+        const filters = this.$route.query.filters || {};
         this.$router.push({}); // ?
-        this.$router.push({ query: { filters: this.filters } });
+        this.$router.push({ query: { filters: Object.assign({}, filters, this.filters )} });
       },
 
       ...mapMutations('category', [
