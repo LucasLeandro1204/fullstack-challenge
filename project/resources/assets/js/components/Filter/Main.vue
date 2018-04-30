@@ -1,8 +1,8 @@
 <template>
   <aside class="text-sm">
-    <form class="text-grey-darkest" @submit.prevent="update">
+    <form class="text-grey-darkest" @submit.prevent="submit">
       <filter-field class="h-8 border rounded items-center pl-4 pr-8" row>
-        <input type="text" placeholder="Search" class="rounded w-full" v-model="filters.query ">
+        <input type="text" placeholder="Search" class="rounded w-full" v-model="values.query">
         <button type="submit" class="-mr-4">
           <i class="fa fa-search text-grey"></i>
         </button>
@@ -10,12 +10,12 @@
 
       <filter-field :title="field.name" :key="field.id" v-for="field in current.fields">
         <div class="flex h-8" v-if="field.type === 'range'">
-          <input class="w-full border px-2 rounded-tl rounded-bl" type="number" placeholder="From" v-model="filters[field.id].from">
-          <input class="w-full border border-l-0 px-2 rounded-tr rounded-br" type="number" placeholder="To" v-model="filters[field.id].to">
+          <input class="w-full border px-2 rounded-tl rounded-bl" type="number" placeholder="From" v-model="values[field.id].from">
+          <input class="w-full border border-l-0 px-2 rounded-tr rounded-br" type="number" placeholder="To" v-model="values[field.id].to">
         </div>
 
         <label :key="option" v-for="(option, index) in field.options" v-else>
-          <input class="mr-1" :class="{ 'mt-3': index != 0 }" type="checkbox" :value="option" v-model="filters[field.id]">
+          <input class="mr-1" :class="{ 'mt-3': index != 0 }" type="checkbox" :value="option" v-model="values[field.id]">
           {{ option }}
         </label>
       </filter-field>
@@ -45,8 +45,6 @@
   import FilterField from './Field.vue';
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
 
-  const FILTER_KEY = '?filters';
-
   export default {
     components: {
       FilterField,
@@ -65,8 +63,37 @@
     },
 
     computed: {
+      values () {
+        const filters = this.filters;
+
+        if (! this.current.fields) {
+          return filters;
+        }
+
+        this.current.fields.forEach(({ id, type }) => {
+          if (filters[id]) {
+            return;
+          }
+
+          if (type == 'range') {
+            filters[id] = {
+              from: null,
+              to: null,
+            };
+          } else {
+            filters[id] = [];
+          }
+        });
+
+        return filters;
+      },
+
       query () {
-        return { [FILTER_KEY]: this.filters };
+        return {
+          filters: {
+            query: this.filters.query,
+          },
+        };
       },
 
       ...mapState('category', [
@@ -82,7 +109,6 @@
       next(self =>
         self.loadCategories(self.categorySlug)
           .then(() => self.CHANGE_CATEGORY(self.categorySlug))
-          .then(() => self.reset())
           .then(() => self.filters = self.$route.query.filters || {})
       );
     },
@@ -90,39 +116,13 @@
     beforeRouteUpdate (to, from, next) {
       this.CHANGE_CATEGORY(to.params.categorySlug);
 
-      if (! to.query[FILTER_KEY]) {
-        to.query[FILTER_KEY] = this.filters;
-      }
-
       next();
     },
 
     methods: {
-      reset () {
-        if (! this.current.fields) {
-          this.filters = {};
-
-          return;
-        }
-
-        this.filters = this.current.fields.reduce((pr, field) => {
-          if (field.type === 'range') {
-            pr[field.id] = {
-              to: 0,
-              from: 0,
-            };
-          } else {
-            pr[field.id] = [];
-          }
-
-          return pr;
-        }, {});
-
-        console.log(this.filters, this.current.fields);
-      },
-
-      update () {
-        this.$router.push({ query: this.query });
+      submit () {
+        this.$router.push({}); // ?
+        this.$router.push({ query: { filters: this.filters } });
       },
 
       ...mapMutations('category', [
