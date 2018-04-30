@@ -56,8 +56,20 @@
     data () {
       return {
         index: 0,
-        dropdown: true,
+        dropdown: false,
       };
+    },
+
+    created () {
+      const filters = this.$route.query.filters;
+
+      if (filters && filters.order_by) {
+        const index = this.options.findIndex(
+          option => option.field == filters.order_by.field && option.sorted == filters.order_by.sorted
+        );
+
+        this.index = index == -1 ? 0 : index;
+      }
     },
 
     methods: {
@@ -73,6 +85,7 @@
             }),
           },
         });
+        this.dropdown = false;
       },
     },
   };
