@@ -2,7 +2,7 @@
   <aside class="text-sm">
     <form class="text-grey-darkest" @submit.prevent="submit">
       <filter-field class="h-8 border rounded items-center pl-4 pr-8" row>
-        <input type="text" placeholder="Search" class="rounded w-full" v-model="values.query">
+        <input type="text" placeholder="Search by title" class="rounded w-full" v-model="values.query">
         <button type="submit" class="-mr-4">
           <i class="fa fa-search text-grey"></i>
         </button>
@@ -114,6 +114,12 @@
     },
 
     beforeRouteUpdate (to, from, next) {
+      if (from && from.params.categorySlug !== to.params.categorySlug) {
+        this.filters = {
+          query: this.filters.query,
+        };
+      }
+
       this.CHANGE_CATEGORY(to.params.categorySlug);
 
       next();

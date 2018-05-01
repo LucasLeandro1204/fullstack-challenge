@@ -4,7 +4,7 @@
       <nav>
         <ul class="list-reset h-8 flex items-center">
           <li>
-            <router-link CLASS="text-black" :to="{ name: 'home.index', query: $route.query }">
+            <router-link CLASS="text-black" :to="{ name: 'home.index', query }">
               <h1 class="font-thin text-xl">All</h1>
             </router-link>
           </li>
@@ -39,6 +39,24 @@
       ...mapGetters('category', [
         'current',
       ]),
+
+      query () {
+        const filters = this.$route.query.filters;
+
+        return {
+          filters: {
+            query: filters ? filters.query : '',
+          },
+        };
+      },
     },
+
+    beforeRouteUpdate (to, from, next) {
+      if (to.query.filters) {
+        console.log('ok');
+      }
+
+      next();
+    }
   };
 </script>
