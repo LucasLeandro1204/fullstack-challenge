@@ -1,5 +1,5 @@
 <template>
-  <li class="relative">
+  <li class="relative font-thin ">
     <a class="text-black text-xs" href="#" @click="dropdown = ! dropdown">
       <span class="text-base" v-text="selected.name"></span> <i class="fa fa-chevron-down"></i>
     </a>
@@ -7,7 +7,7 @@
       <li :key="i" v-for="(option, i) in options">
         <a
           href="#"
-          class="py-1 block hover:text-black text-sm"
+          class="py-1 block hover:text-grey-darkest text-sm"
           :class="index == i ? 'text-black' : 'text-grey-dark'"
           @click.prevent="select(i)"
           v-text="option.name"></a>

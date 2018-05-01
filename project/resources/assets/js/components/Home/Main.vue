@@ -4,15 +4,20 @@
       <nav>
         <ul class="list-reset h-8 flex items-center">
           <li>
-            <router-link :to="{ name: 'home.index' }">
-              <h1 class="font-thin text-xl text-black">All</h1>
+            <router-link CLASS="text-black" :to="{ name: 'home.index', query: $route.query }">
+              <h1 class="font-thin text-xl">All</h1>
             </router-link>
           </li>
-          <li class="ml-2" v-if="current.name">
-            <router-link :to="{ name: 'home.index', params: { currentSlug: current.slug } }">
-              <h1 class="font-thin text-xl text-black">> {{ current.name }}</h1>
-            </router-link>
-          </li>
+
+          <template v-if="current.name">
+            <li class="ml-2 cursor-default">></li>
+
+            <li class="ml-2" v-if="current.name">
+              <a href="#" class="text-black">
+                <h1 class="font-thin text-xl" v-text="current.name"></h1>
+              </a>
+            </li>
+          </template>
 
           <home-dropdown class="ml-auto" />
         </ul>
