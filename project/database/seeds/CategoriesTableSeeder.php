@@ -14,6 +14,7 @@ class CategoriesTableSeeder extends Seeder
         [
             'name' => 'Cars',
             'icon' => 'fa-car',
+            'slug' => 'cars',
             'fields' => [
                 [
                     'name' => 'Mileage in kilometers',
@@ -34,18 +35,22 @@ class CategoriesTableSeeder extends Seeder
         ],
         [
             'name' => 'Motorcycles',
+            'slug' => 'motorcycles',
             'icon' => 'fa-motorcycle',
         ],
         [
             'name' => 'Properties to rent',
+            'slug' => 'properties-to-rent',
             'icon' => 'fa-building',
         ],
         [
             'name' => 'Electronics',
+            'slug' => 'electronics',
             'icon' => 'fa-television',
         ],
         [
             'name' => 'To your home',
+            'slug' => 'to-your-home',
             'icon' => 'fa-television',
         ],
     ];

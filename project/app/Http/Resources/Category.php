@@ -17,7 +17,7 @@ class Category extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'slug' => str_slug($this->name),
+            'slug' => $this->slug,
             'fields' => $this->fields,
             'advertisements' => $this->advertisements()->count(),
         ];

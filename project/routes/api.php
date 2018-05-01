@@ -5,5 +5,5 @@ Route::prefix('category')->name('category.')->group(function () {
 });
 
 Route::prefix('advertisement')->name('advertisement.')->group(function () {
-    Route::get('/', 'AdvertisementController@index')->name('index');
+    Route::get('/{category}', 'AdvertisementController@index')->name('index');
 });
