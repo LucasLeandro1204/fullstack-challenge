@@ -30,22 +30,22 @@
           {
             name: 'Latest',
             field: 'created_at',
-            sorted: 'asc',
+            sort: 'asc',
           },
           {
             name: 'Oldest',
             field: 'created_at',
-            sorted: 'desc',
+            sort: 'desc',
           },
           {
             name: 'Price High',
             field: 'price',
-            sorted: 'asc',
+            sort: 'asc',
           },
           {
             name: 'Price Low',
             field: 'price',
-            sorted: 'desc',
+            sort: 'desc',
           },
         ];
       },
@@ -67,7 +67,7 @@
 
       if (order_by) {
         const index = this.options.findIndex(
-          option => option.field == order_by.field && option.sorted == order_by.sorted
+          option => option.field == order_by.field && option.sort == order_by.sort
         );
 
         this.index = index == -1 ? 0 : index;
@@ -80,7 +80,7 @@
         this.MERGE_FILTERS({
           order_by: {
             field: this.selected.field,
-            sorted: this.selected.sorted,
+            sort: this.selected.sort,
           },
         });
         this.dropdown = false;
