@@ -1,6 +1,6 @@
 <template>
   <aside class="text-sm">
-    <form class="text-grey-darkest" @submit.prevent="submit">
+    <form class="text-grey-darkest" @submit.prevent="MERGE_FILTERS(filtered())">
       <filter-field class="h-8 border rounded items-center pl-4 pr-8" row>
         <input type="text" placeholder="Search by title" class="rounded w-full" v-model="values.query">
         <button type="submit" class="-mr-4">
@@ -10,12 +10,12 @@
 
       <filter-field :title="field.name" :key="field.id" v-for="field in current.fields">
         <div class="flex h-8" v-if="field.type === 'range'">
-          <input class="w-full border px-2 rounded-tl rounded-bl" type="number" placeholder="From" v-model="values[field.id].from">
-          <input class="w-full border border-l-0 px-2 rounded-tr rounded-br" type="number" placeholder="To" v-model="values[field.id].to">
+          <input class="w-full border px-2 rounded-tl rounded-bl" type="number" placeholder="From" v-model="values.filters[field.id].from">
+          <input class="w-full border border-l-0 px-2 rounded-tr rounded-br" type="number" placeholder="To" v-model="values.filters[field.id].to">
         </div>
 
         <label :key="option" v-for="(option, index) in field.options" v-else>
-          <input class="mr-1" :class="{ 'mt-3': index != 0 }" type="checkbox" :value="option" v-model="values[field.id]">
+          <input class="mr-1" :class="{ 'mt-3': index != 0 }" type="checkbox" :value="option" v-model="values.filters[field.id]">
           {{ option }}
         </label>
       </filter-field>
@@ -29,7 +29,7 @@
       <ul class="list-reset" v-if="list.length">
         <li :key="category.id" v-for="category in list">
           <router-link
-            :to="{ name: 'home.index', params: { categorySlug: category.slug }, query }"
+            :to="{ name: 'home.index', params: { categorySlug: category.slug } }"
             class="text-grey-darkest block p-1 -mx-1 my-1 hover:bg-grey-lightest rounded"
             :class="{ 'bg-grey-lightest': categorySlug === category.slug }" >
             <span class="float-right text-grey" v-text="category.advertisements"></span>
@@ -63,39 +63,6 @@
     },
 
     computed: {
-      values () {
-        const filters = this.filters;
-
-        if (! this.current.fields) {
-          return filters;
-        }
-
-        this.current.fields.forEach(({ id, type }) => {
-          if (filters[id]) {
-            return;
-          }
-
-          if (type == 'range') {
-            filters[id] = {
-              from: null,
-              to: null,
-            };
-          } else {
-            filters[id] = [];
-          }
-        });
-
-        return filters;
-      },
-
-      query () {
-        return {
-          filters: {
-            query: this.filters.query,
-          },
-        };
-      },
-
       ...mapState('category', [
         'list',
       ]),
@@ -103,34 +70,86 @@
       ...mapGetters('category', [
         'current',
       ]),
+
+      values () {
+        this.filters = {
+          filters: {},
+          query: this.filters.query,
+        };
+
+        if (this.current && this.current.fields) {
+          this.current.fields.forEach(field =>
+            this.filters.filters[field.id] = field.type === 'range'
+              ? {
+                from: '',
+                to: '',
+              } : []
+          );
+        }
+
+        return this.filters;
+      },
     },
 
     beforeRouteEnter (to, from, next) {
       next(self =>
         self.loadCategories(self.categorySlug)
           .then(() => self.CHANGE_CATEGORY(self.categorySlug))
-          .then(() => self.filters = self.$route.query.filters || {})
       );
     },
 
     beforeRouteUpdate (to, from, next) {
-      if (from && from.params.categorySlug !== to.params.categorySlug) {
-        this.filters = {
-          query: this.filters.query,
-        };
-      }
-
       this.CHANGE_CATEGORY(to.params.categorySlug);
 
       next();
     },
 
     methods: {
-      submit () {
-        const filters = this.$route.query.filters || {};
-        this.$router.push({}); // ?
-        this.$router.push({ query: { filters: Object.assign({}, filters, this.filters )} });
+
+      /**
+       * Ugly as fuck, but you can understand it.
+       */
+      filtered () {
+        const filters = this.filters.filters;
+        const filtered = {};
+
+        if (this.filters.query) {
+          filtered.query = this.filters.query;
+        }
+
+        filtered.filters = Object.keys(filters)
+          .reduce((obj, key) => {
+            const value = filters[key];
+
+            if (typeof value === 'string' && value) {
+              obj[key] = value;
+            }
+
+            if (Array.isArray(value) && value.length) {
+              obj[key] = value;
+            }
+
+            if (value.from || value.to) {
+              obj[key] = {};
+            }
+
+            if (value.from) {
+              obj[key].from = value.from;
+            }
+
+            if (value.to) {
+              obj[key].to = value.to;
+            }
+
+            return obj;
+          }, {});
+
+        return filtered;
       },
+
+      ...mapMutations('filter', [
+        'MERGE_FILTERS',
+      ]),
 
       ...mapMutations('category', [
         'CHANGE_CATEGORY',

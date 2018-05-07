@@ -17,12 +17,10 @@
 </template>
 
 <script>
+  import { mapState, mapMutations } from 'vuex';
+
   export default {
     computed: {
-      filters () {
-        return this.$route.query.filters || {};
-      },
-
       selected () {
         return this.options[this.index];
       },
@@ -51,6 +49,10 @@
           },
         ];
       },
+
+      ...mapState('filter', [
+        'filters',
+      ]),
     },
 
     data () {
@@ -61,11 +63,11 @@
     },
 
     created () {
-      const filters = this.$route.query.filters;
+      const order_by = this.filters.order_by;
 
-      if (filters && filters.order_by) {
+      if (order_by) {
         const index = this.options.findIndex(
-          option => option.field == filters.order_by.field && option.sorted == filters.order_by.sorted
+          option => option.field == order_by.field && option.sorted == order_by.sorted
         );
 
         this.index = index == -1 ? 0 : index;
@@ -75,18 +77,18 @@
     methods: {
       select (index) {
         this.index = index;
-        this.$router.push({
-          query: {
-            filters: Object.assign({}, this.filters, {
-              order_by: {
-                field: this.selected.field,
-                sorted: this.selected.sorted,
-              },
-            }),
+        this.MERGE_FILTERS({
+          order_by: {
+            field: this.selected.field,
+            sorted: this.selected.sorted,
           },
         });
         this.dropdown = false;
       },
+
+      ...mapMutations('filter', [
+        'MERGE_FILTERS',
+      ]),
     },
   };
 </script>

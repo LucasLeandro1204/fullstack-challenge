@@ -4,15 +4,17 @@
       <nav>
         <ul class="list-reset h-8 flex items-center">
           <li>
-            <router-link CLASS="text-black" :to="{ name: 'home.index', query }">
+            <router-link class="text-black" :to="{ name: 'home.index' }">
               <h1 class="font-thin text-xl">All</h1>
             </router-link>
           </li>
 
           <template v-if="current.name">
-            <li class="ml-2 cursor-default">></li>
+            <li class="ml-2 cursor-default">
+              >
+            </li>
 
-            <li class="ml-2" v-if="current.name">
+            <li class="ml-2">
               <a href="#" class="text-black">
                 <h1 class="font-thin text-xl" v-text="current.name"></h1>
               </a>
@@ -27,36 +29,51 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+  import Axios from 'core/axios';
   import HomeDropdown from './Dropdown.vue';
+  import { mapGetters, mapState } from 'vuex';
 
   export default {
     components: {
       HomeDropdown,
     },
 
+    data: () => ({
+      advertisements: null,
+    }),
+
     computed: {
       ...mapGetters('category', [
         'current',
       ]),
 
-      query () {
-        const filters = this.$route.query.filters;
+      ...mapState('filter', [
+        'filters',
+      ]),
+    },
 
-        return {
-          filters: {
-            query: filters ? filters.query : '',
-          },
-        };
+    watch: {
+      'filters' () {
+        this.fetch();
       },
     },
 
-    beforeRouteUpdate (to, from, next) {
-      if (to.query.filters) {
-        console.log('ok');
-      }
+    created () {
+      this.fetch();
+    },
 
-      next();
-    }
+    methods: {
+      fetch () {
+        const params = Object.assign({}, this.filters);
+
+        if (this.current.category) {
+          params.category = this.current.id;
+        }
+
+        Axios.get('advertisement', {
+          params,
+        });
+      },
+    },
   };
 </script>
