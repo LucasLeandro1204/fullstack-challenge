@@ -61,7 +61,7 @@ class SearchAdvertisements
      */
     public function get(int $perPage = 15): Paginator
     {
-        return Advertisement::orderBy($this->field, $this->sort)
+        $query = Advertisement::orderBy($this->field, $this->sort)
             ->when($this->query, function (Builder $builder) {
                 $builder->where('title', 'LIKE', "%$this->query%");
             })
@@ -71,24 +71,23 @@ class SearchAdvertisements
                 });
             })
             ->when($this->filters, function (Builder $builder) {
-                $builder->whereHas('values', function (Builder $builder) {
-                    foreach ($this->filters as $key => $value) {
-                        $builder->where(function (Builder $builder) use ($key, $value) {
-                            $builder->where('field_id', $key);
+                foreach ($this->filters as $key => $value) {
+                    $builder->whereHas('values', function (Builder $builder) use ($key, $value) {
+                        $builder->where('field_id', $key);
 
-                            if (isset($value['from']) || $value['to']) {
-                                $builder->where('value', '>', $value['from'] ?? 0)
-                                    ->when(isset($value['to']), function (Builder $builder) use ($value) {
-                                        $builder->where('value', '<', $value['to']);
-                                    });
-                            } else {
-                                $builder->whereIn('value', $value);
-                            }
-                        });
-                    }
-                });
-            })->paginate($perPage);
+                        if (isset($value['from']) || isset($value['to'])) {
+                            $builder->where('value', '>', $value['from'] ?? 0)
+                                ->when(isset($value['to']), function (Builder $builder) use ($value) {
+                                    $builder->where('value', '<', $value['to']);
+                                });
+                        } else {
+                            $builder->whereIn('value', $value);
+                        }
+                    });
+                }
+            });
 
+        return $query->paginate();
     }
 
     /**
