@@ -2,8 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { stringify, parse } from 'qs';
 
-import Home from '@/Home/Main.vue';
-import Filter from '@/Filter/Main.vue';
+import Home from '@/Home/Main';
+import Filter from '@/Filter/Main';
 
 Vue.use(VueRouter);
 

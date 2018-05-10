@@ -24,23 +24,25 @@
           <home-dropdown class="ml-auto" />
         </ul>
       </nav>
+
     </header>
+
+    <article>
+      <home-list />
+    </article>
   </section>
 </template>
 
 <script>
-  import Axios from 'core/axios';
-  import HomeDropdown from './Dropdown.vue';
-  import { mapGetters, mapState } from 'vuex';
+  import HomeList from './List';
+  import HomeDropdown from './Dropdown';
+  import { mapGetters, mapState, mapActions } from 'vuex';
 
   export default {
     components: {
+      HomeList,
       HomeDropdown,
     },
-
-    data: () => ({
-      advertisements: null,
-    }),
 
     computed: {
       ...mapGetters('category', [
@@ -54,26 +56,18 @@
 
     watch: {
       'filters' () {
-        this.fetch();
+        this.fetchAdvertisements();
       },
     },
 
     created () {
-      this.fetch();
+      this.fetchAdvertisements();
     },
 
     methods: {
-      fetch () {
-        const params = Object.assign({}, this.filters);
-
-        if (this.current.category) {
-          params.category = this.current.id;
-        }
-
-        Axios.get('advertisement', {
-          params,
-        });
-      },
+      ...mapActions('advertisement', [
+        'fetchAdvertisements',
+      ]),
     },
   };
 </script>

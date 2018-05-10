@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import FilterField from './Field.vue';
+  import FilterField from './Field';
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
 
   export default {

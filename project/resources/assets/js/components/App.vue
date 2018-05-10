@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import AppHeader from '@/Header.vue';
+  import AppHeader from '@/Header';
 
   import store from 'core/store';
   import router from 'core/router';
