@@ -2,7 +2,7 @@
   <aside class="text-sm">
     <form class="text-grey-darkest" @submit.prevent="MERGE_FILTERS(filtered())">
       <filter-field class="h-8 border rounded items-center pl-4 pr-8" row>
-        <input type="text" placeholder="Search by title" class="rounded w-full" v-model="values.query">
+        <input type="text" placeholder="Search by title" class="rounded w-full" v-model="values.search">
         <button type="submit" class="-mr-4">
           <i class="fa fa-search text-grey"></i>
         </button>
@@ -74,7 +74,7 @@
       values () {
         this.filters = {
           filters: {},
-          query: this.filters.query,
+          search: this.filters.search,
         };
 
         if (this.current && this.current.fields) {
@@ -113,8 +113,8 @@
         const filters = this.filters.filters;
         const filtered = {};
 
-        if (this.filters.query) {
-          filtered.query = this.filters.query;
+        if (this.filters.search) {
+          filtered.search = this.filters.search;
         }
 
         filtered.filters = Object.keys(filters)
