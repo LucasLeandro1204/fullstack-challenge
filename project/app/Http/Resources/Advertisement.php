@@ -20,6 +20,7 @@ class Advertisement extends JsonResource
             'thumbnail' => $this->thumbnail,
             'description' => $this->description,
             'category' => $this->category->name,
+            'placeholder' => $this->category->icon,
             'fields' => FieldValue::collection($this->whenLoaded('fields')),
             'created_at' => $this->created_at,
         ];

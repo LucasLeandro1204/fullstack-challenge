@@ -30,6 +30,10 @@ class Advertisement extends Model
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)
+            ->withDefault([
+                'icon' => 'fa-file-o',
+                'name' => 'No category',
+            ]);
     }
 }
