@@ -46,7 +46,7 @@ class Query
     {
         $instance = $this->query();
 
-        $data = $request->validate($this->rules);
+        $data = array_merge($this->defaults, $request->validate($this->rules));
 
         foreach ($data as $key => $value) {
             $instance->{camel_case($key)}($value);
