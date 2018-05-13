@@ -14,7 +14,7 @@ $factory->define(Advertisement::class, function (Faker $faker) {
             return factory(Category::class)->create()->id;
         },
         'title' => $faker->sentence,
-        'price' => $faker->numberBetween(10000, 1000000),
+        'price' => $faker->numberBetween(1000, 100000),
         'description' => implode('\n', $faker->paragraphs),
     ];
 });
