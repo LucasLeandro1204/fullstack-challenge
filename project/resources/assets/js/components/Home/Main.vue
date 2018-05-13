@@ -27,9 +27,7 @@
 
     </header>
 
-    <article>
-      <home-list />
-    </article>
+    <home-list />
   </section>
 </template>
 
