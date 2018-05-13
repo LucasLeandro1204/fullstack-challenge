@@ -23,6 +23,7 @@ class AdvertisementController extends Controller
     {
         $this->search = $search;
     }
+
     /**
      * List advertisements.
      */

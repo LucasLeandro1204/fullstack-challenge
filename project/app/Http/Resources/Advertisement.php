@@ -17,6 +17,7 @@ class Advertisement extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'price' => $this->price,
             'thumbnail' => $this->thumbnail,
             'description' => $this->description,
             'category' => $this->category->name,

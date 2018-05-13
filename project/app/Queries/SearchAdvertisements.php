@@ -14,8 +14,7 @@ class SearchAdvertisements extends Query
      */
     protected $defaults = [
         'order_by' => [
-            'field' => 'id',
-            'sort' => 'desc',
+            'id', 'desc',
         ],
     ];
 
@@ -23,14 +22,13 @@ class SearchAdvertisements extends Query
      * {@inheritdoc}
      */
     protected $rules = [
-        'search' => 'string',
-        'filters' => 'array',
-        'filters.*' => 'array',
         'category' => 'integer',
-        'filters.*.to' => 'integer',
-        'filters.*.from' => 'integer',
-        'order_by.field' => 'sometimes|required',
-        'order_by.sort' => 'sometimes|required|string|in:asc,desc',
+        'range.*.0' => 'integer',
+        'range.*.1' => 'integer',
+        'check_box.*' => 'array',
+        'search' => 'string|nullable',
+        'order_by.0' => 'sometimes|required',
+        'order_by.1' => 'sometimes|required|string|in:asc,desc',
     ];
 
     /**
@@ -50,16 +48,6 @@ class SearchAdvertisements extends Query
     }
 
     /**
-     * Order by method proxy.
-     */
-    protected function orderBy(array $config): self
-    {
-        $this->model->orderBy($config['field'], $config['sort']);
-
-        return $this;
-    }
-
-    /**
      * Filter by category.
      */
     public function category(int $id): self
@@ -72,22 +60,32 @@ class SearchAdvertisements extends Query
     }
 
     /**
-     * Custom fields filter.
+     * Custom field check box filter.
      */
-    public function filters(array $filters): self
+    public function checkBox(array $options): self
     {
-        foreach ($filters as $key => $value) {
-            $builder->whereHas('values', function (Builder $builder) use ($key, $value) {
-                $builder->where('field_id', $key);
+        foreach ($options as $key => $value) {
+            $this->whereHas('values', function (Builder $builder) use ($key, $value) {
+                $builder->where('field_id', $key)
+                    ->whereIn('value', $value);
+            });
+        }
 
-                if (isset($value['from']) || isset($value['to'])) {
-                    $builder->where('value', '>', $value['from'] ?? 0)
-                        ->when(isset($value['to']), function (Builder $builder) use ($value) {
-                            $builder->where('value', '<', $value['to']);
-                        });
-                } else {
-                    $builder->whereIn('value', $value);
-                }
+        return $this;
+    }
+
+    /**
+     * Custom field range filter.
+     */
+    public function range(array $ranges): self
+    {
+        foreach ($ranges as $key => $value) {
+            $this->whereHas('values', function (Builder $builder) use ($key, $value) {
+                $builder->where('field_id', $key)
+                    ->where('value', '>', $value[0] ?? 0)
+                    ->when(isset($value[1]), function (Builder $builder) use ($value) {
+                        $builder->where('value', '<', $value[1]);
+                    });
             });
         }
 
@@ -97,7 +95,7 @@ class SearchAdvertisements extends Query
     /**
      * Filter by title or description.
      */
-    public function search(string $keyword): self
+    public function search(?string $keyword): self
     {
         $this->model->where(function (Builder $builder) use ($keyword) {
             $builder->where('title', 'LIKE', "%$keyword%")

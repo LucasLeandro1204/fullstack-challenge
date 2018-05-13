@@ -40,6 +40,16 @@ class Query
     }
 
     /**
+     * Order by method proxy.
+     */
+    protected function orderBy(array $config): self
+    {
+        $this->model->orderBy($config[0], $config[1]);
+
+        return $this;
+    }
+
+    /**
      * Create a new query instance from request.
      */
     public function from(Request $request): self
@@ -48,10 +58,19 @@ class Query
 
         $data = array_merge($this->defaults, $request->validate($this->rules));
 
+
         foreach ($data as $key => $value) {
             $instance->{camel_case($key)}($value);
         }
 
         return $instance;
+    }
+
+    /**
+     * Handle dynamic method calls into the model.
+     */
+    public function __call(string $method, array $parameters)
+    {
+        return call_user_func_array([$this->model, $method], $parameters);
     }
 }
