@@ -3,7 +3,7 @@
     <a class="text-black text-xs" href="#" @click="dropdown = ! dropdown">
       <span class="text-base" v-text="selected.name"></span> <i class="fa fa-chevron-down"></i>
     </a>
-    <ul class="list-reset absolute bg-white shadow mt-2 w-32 pin-r p-2" v-if="dropdown">
+    <ul class="list-reset absolute bg-white shadow mt-2 w-32 pin-r p-2 z-50" v-if="dropdown">
       <li :key="i" v-for="(option, i) in options">
         <a
           href="#"
@@ -30,22 +30,22 @@
           {
             name: 'Latest',
             field: 'created_at',
-            sort: 'asc',
+            order: 'asc',
           },
           {
             name: 'Oldest',
             field: 'created_at',
-            sort: 'desc',
+            order: 'desc',
           },
           {
             name: 'Price High',
             field: 'price',
-            sort: 'asc',
+            order: 'asc',
           },
           {
             name: 'Price Low',
             field: 'price',
-            sort: 'desc',
+            order: 'desc',
           },
         ];
       },
@@ -67,7 +67,7 @@
 
       if (order_by) {
         const index = this.options.findIndex(
-          option => option.field == order_by.field && option.sort == order_by.sort
+          option => option.field == order_by.field && option.order == order_by.order
         );
 
         this.index = index == -1 ? 0 : index;
@@ -78,10 +78,10 @@
       select (index) {
         this.index = index;
         this.MERGE_FILTERS({
-          order_by: {
-            field: this.selected.field,
-            sort: this.selected.sort,
-          },
+          order_by: [
+            this.selected.field,
+            this.selected.order,
+          ],
         });
         this.dropdown = false;
       },

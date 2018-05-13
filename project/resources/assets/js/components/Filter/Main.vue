@@ -1,6 +1,6 @@
 <template>
   <aside class="text-sm">
-    <form class="text-grey-darkest" @submit.prevent="MERGE_FILTERS(filtered())">
+    <form class="text-grey-darkest" @submit.prevent="MERGE_FILTERS(filters)">
       <filter-field class="h-8 border rounded items-center pl-4 pr-8" row>
         <input type="text" placeholder="Search by title" class="rounded w-full" v-model="values.search">
         <button type="submit" class="-mr-4">
@@ -10,12 +10,12 @@
 
       <filter-field :title="field.name" :key="field.id" v-for="field in current.fields">
         <div class="flex h-8" v-if="field.type === 'range'">
-          <input class="w-full border px-2 rounded-tl rounded-bl" type="number" placeholder="From" v-model="values.filters[field.id].from">
-          <input class="w-full border border-l-0 px-2 rounded-tr rounded-br" type="number" placeholder="To" v-model="values.filters[field.id].to">
+          <input class="w-full border px-2 rounded-tl rounded-bl" type="number" placeholder="From" v-model="values[field.type][field.id][0]">
+          <input class="w-full border border-l-0 px-2 rounded-tr rounded-br" type="number" placeholder="To" v-model="values[field.type][field.id][1]">
         </div>
 
         <label :key="option" v-for="(option, index) in field.options" v-else>
-          <input class="mr-1" :class="{ 'mt-3': index != 0 }" type="checkbox" :value="option" v-model="values.filters[field.id]">
+          <input class="mr-1" :class="{ 'mt-3': index != 0 }" type="checkbox" :value="option" v-model="values[field.type][field.id]">
           {{ option }}
         </label>
       </filter-field>
@@ -73,18 +73,13 @@
 
       values () {
         this.filters = {
-          filters: {},
           search: this.filters.search,
         };
 
         if (this.current && this.current.fields) {
-          this.current.fields.forEach(field =>
-            this.filters.filters[field.id] = field.type === 'range'
-              ? {
-                from: '',
-                to: '',
-              } : []
-          );
+          this.current.fields
+            .map(field => (this.filters[field.type] = {}) && field)
+            .forEach(field => this.filters[field.type][field.id] = field.type == 'range' ? {} : []);
         }
 
         return this.filters;
@@ -105,48 +100,6 @@
     },
 
     methods: {
-
-      /**
-       * Ugly as fuck, but you can understand it.
-       */
-      filtered () {
-        const filters = this.filters.filters;
-        const filtered = {};
-
-        if (this.filters.search) {
-          filtered.search = this.filters.search;
-        }
-
-        filtered.filters = Object.keys(filters)
-          .reduce((obj, key) => {
-            const value = filters[key];
-
-            if (typeof value === 'string' && value) {
-              obj[key] = value;
-            }
-
-            if (Array.isArray(value) && value.length) {
-              obj[key] = value;
-            }
-
-            if (value.from || value.to) {
-              obj[key] = {};
-            }
-
-            if (value.from) {
-              obj[key].from = value.from;
-            }
-
-            if (value.to) {
-              obj[key].to = value.to;
-            }
-
-            return obj;
-          }, {});
-
-        return filtered;
-      },
-
       ...mapMutations('filter', [
         'MERGE_FILTERS',
       ]),
