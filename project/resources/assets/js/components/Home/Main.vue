@@ -58,6 +58,14 @@
       },
     },
 
+    /**
+     * Push filters to route (bug) and drop filters watch.
+     */
+    beforeRouteUpdate (to, from, next) {
+      this.fetchAdvertisements();
+      next();
+    },
+
     created () {
       this.fetchAdvertisements();
     },

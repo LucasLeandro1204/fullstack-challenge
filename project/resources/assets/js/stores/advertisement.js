@@ -17,7 +17,7 @@ const mutations = {
 
 const actions = {
   fetchAdvertisements ({ commit, rootState, rootGetters }) {
-    const params = Object.assign({}, rootState.filter.filters);
+    const params = Object.assign({}, rootState.filter.filters, this.paginate);
     const category = rootGetters['category/current'];
 
     if (category.id) {
@@ -26,13 +26,16 @@ const actions = {
 
     commit('SET_ADVERTISEMENTS', null);
 
-    return Axios.get('advertisement', {
-        params,
-      })
-      .then(({ data }) => {
+    const promise = Axios.get('advertisement', {
+      params,
+    });
+    const timeout = new Promise((resolve) => setTimeout(resolve, 2000));
+
+    Promise.all([promise, timeout])
+      .then(([{ data }]) => {
         commit('SET_ADVERTISEMENTS', data.data);
       })
-      .catch(() => {});
+      .catch(console.log);
   },
 };
 
