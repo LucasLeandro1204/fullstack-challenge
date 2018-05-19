@@ -1,6 +1,6 @@
 <template>
   <li class="relative font-thin ">
-    <a class="text-black text-xs" href="#" @click="dropdown = ! dropdown">
+    <a class="text-black text-xs" href="#" @click.prevent="dropdown = ! dropdown">
       <span class="text-base" v-text="selected.name"></span> <i class="fa fa-chevron-down"></i>
     </a>
     <ul class="list-reset absolute bg-white shadow mt-2 w-32 pin-r p-2 z-50" v-if="dropdown">
